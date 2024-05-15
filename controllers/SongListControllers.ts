@@ -4,6 +4,7 @@ import SongList from "../models/SongList"; // Adjust the path to where your song
 
 // Controller to get all songs from the database
 const getAllSongs = async (req: Request, res: Response) => {
+  console.log("getAllSongs");
   try {
     // Fetch all songs from the database
     const songs = await SongList.find();
