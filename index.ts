@@ -1,9 +1,9 @@
-// src/index.js
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-dotenv.config();
-
 import mongoose from "mongoose";
+import songRoutes from "./routes/SongRoutes" // Adjust the path as necessary
+
+dotenv.config();
 
 const mongoUri = process.env.MONGO_URI as string;
 mongoose
@@ -15,13 +15,17 @@ mongoose
     console.log("Error connecting to MongoDB: ", error);
   });
 
-
 const app: Express = express();
 const port = process.env.PORT || 3000;
+
+app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("TypeScript + Node.js + Express Server");
 });
+
+// Initialize routes
+app.use("/songs", songRoutes);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
