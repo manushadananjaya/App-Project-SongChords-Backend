@@ -6,6 +6,7 @@ interface UserBaseDocument extends Document {
   name: string;
   email: string;
   password: string;
+  refreshToken?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,7 @@ const UserSchema = new Schema<UserModel>(
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    refreshToken: { type: String },
   },
   { timestamps: true }
 );
