@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import songRoutes from "./routes/SongRoutes" // Adjust the path as necessary
+import artistRoutes from "./routes/ArtistRoutes" // Adjust the path as necessary
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Initialize routes
 app.use("/songs", songRoutes);
+app.use("/artists", artistRoutes);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
