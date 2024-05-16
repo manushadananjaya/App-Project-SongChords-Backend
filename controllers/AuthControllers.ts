@@ -5,6 +5,13 @@ import UserModel, {UserModelDocument} from "../models/UserModel";
 const userSignUp = async (req: Request, res: Response) => {
   try {
     console.log("userSignUp");
+
+    //check if user already exists
+    const userExists = await UserModel.findOne({ email: req .body.email });
+    if (userExists) {
+      return res.status(400).json({ error: "User already exists" });
+    }
+
     // Create a new user from the request body
     const user = new UserModel(req.body);
 
