@@ -1,6 +1,56 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import SongList from "../models/SongList"; // Adjust the path to where your songList.ts file is located
+import AWS from "aws-sdk";
+import multer from "multer";
+const multerS3 = require("multer-s3");
+
+// Configure AWS SDK
+AWS.config.update({
+  region: process.env.AWS_REGION, // e.g., 'us-west-2'
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+const s3 = new AWS.S3();
+
+
+// Function to get a signed URL for an image file
+const getSignedUrl = (bucket: string, key: string) => {
+  const params = {
+    Bucket: bucket,
+    Key: key,
+    Expires: 60, // URL expires in 60 seconds
+  };
+
+  return new Promise<string>((resolve, reject) => {
+    s3.getSignedUrl("getObject", params, (err, url) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(url);
+      }
+    });
+  });
+};
+
+// Controller to get a signed URL for an image file
+const getSongImageUrl = async (req: Request, res: Response) => {
+  try {
+    const songId = req.params.id;
+    const song = await SongList.findById(songId);
+    if (!song) {
+      return res.status(404).json({ error: "Song not found" });
+    }
+
+    const imageUrl = await getSignedUrl("chordsapp", song.imageKey); // Make sure imageKey is the correct key for your image
+    res.status(200).json({ url: imageUrl });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the image URL" });
+  }
+};
 
 // Controller to get all songs from the database
 const getAllSongs = async (req: Request, res: Response) => {
@@ -35,15 +85,14 @@ const newChord = async (req: Request, res: Response) => {
   }
 };
 
-//Search for a if search by title return the song if search by artist return all songs by that artist
-
+// Search for a song: if search by title, return the song; if search by artist, return all songs by that artist
 const getSong = async (req: Request, res: Response) => {
   try {
     const { search, filter } = req.query as {
       search: string;
       filter: "name" | "artist";
     };
-    let songs  = [] as any;
+    let songs = [] as any;
 
     if (filter === "name") {
       // Search for songs by title
@@ -68,7 +117,6 @@ const getSong = async (req: Request, res: Response) => {
 
 export default getSong;
 
-
 // Controller to get all artists from the database
 const getAllArtists = async (req: Request, res: Response) => {
   try {
@@ -83,7 +131,7 @@ const getAllArtists = async (req: Request, res: Response) => {
   }
 };
 
-// Controller to get all songs by a specific artist request send with params
+// Controller to get all songs by a specific artist; request sent with params
 const getArtist = async (req: Request, res: Response) => {
   try {
     // Fetch the artist from the request parameters
@@ -100,6 +148,13 @@ const getArtist = async (req: Request, res: Response) => {
   }
 };
 
-
 // Export the controller functions
-export { getAllSongs, newChord, getSong, getAllArtists, getArtist};
+export {
+  getAllSongs,
+  newChord,
+  getSong,
+  getAllArtists,
+  getArtist,
+  getSongImageUrl,
+  getSignedUrl,
+};
