@@ -1,18 +1,26 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import SongList from "../models/SongList"; // Adjust the path to where your songList.ts file is located
-import AWS from "aws-sdk";
+import AWS, { Endpoint } from "aws-sdk";
 import multer from "multer";
-const multerS3 = require("multer-s3");
+import { sign } from "crypto";
+// const multerS3 = require("multer-s3");
 
 // Configure AWS SDK
 AWS.config.update({
-  region: process.env.AWS_REGION, // e.g., 'us-west-2'
+  region: "eu-north-1", // e.g., 'us-west-2'
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  signatureVersion: "v4",
 });
 
-const s3 = new AWS.S3();
+// const s3 = new AWS.S3({
+//   endpoint: "s3-eu-north-1.amazonaws.com",
+//   signatureVersion: "v4",
+//   region: process.env.AWS_REGION,
+// });
+
+const s3 = new AWS.S3({});
 
 
 // Function to get a signed URL for an image file
