@@ -4,12 +4,14 @@ import mongoose, { Document, Schema } from "mongoose";
 interface ISongList extends Document {
   title: string;
   artist: string;
+  imageKey: string; // Add this line
 }
 
 // Define the schema for the SongList model
 const SongListSchema: Schema = new Schema({
   title: { type: String, required: true },
   artist: { type: String, required: true },
+  imageKey: { type: String, required: true }, // Add this line
 });
 
 // Create the SongList model
