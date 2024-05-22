@@ -1,12 +1,26 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import PlayList from "../models/PlayList";
+import Jwt from "jsonwebtoken";
 
 // Controller to get all playlists
 const getAllPlayLists = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Fetch all playlists from the database
-    const playlists = await PlayList.find().populate("songs").populate("user");
+    const token = req.headers.authorization?.split(" ")[1] as string;
+    const user = Jwt.decode(token) as { _id: string };
+    
+    
+
+    //check access token expired or not
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    
+    // Fetch all playlists from the database that belong to the user
+    const playlists = await PlayList.find({ user: user._id })
+      .populate("songs")
+      .populate("user");
 
     // Return the playlists as a response
     res.status(200).json(playlists);
@@ -21,8 +35,15 @@ const getAllPlayLists = async (req: Request, res: Response): Promise<void> => {
 // Controller to create a new playlist
 const createPlayList = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log("req.body", req.body);
-    const { title, songs, user } = req.body;
+    
+    const token = req.headers.authorization?.split(" ")[1] as string;
+
+    const user = Jwt.decode(token) as { _id: string };
+
+    
+   
+
+    const { title, songs } = req.body;
 
     // Create a new playlist from the request body
     const playlist = new PlayList({ title, songs, user });
@@ -46,6 +67,16 @@ const getPlayList = async (
   res: Response
 ): Promise<Response<any, Record<string, any>>> => {
   try {
+
+    const token = req.headers.authorization?.split(" ")[1] as string;
+    const user = Jwt.decode(token) as { _id: string };
+
+    //validate access 
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+
     const { id } = req.params;
 
     // Validate the ID
@@ -76,6 +107,16 @@ const getPlayList = async (
 // Controller to update a playlist by ID
 const updatePlayList = async (req: Request, res: Response): Promise<void> => {
   try {
+
+    const token = req.headers.authorization?.split(" ")[1] as string;
+    const user = Jwt.decode(token) as { _id: string };
+
+    //validate access
+    if (!user) {
+         res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
     const { id } = req.params;
     const updateData = req.body;
 
@@ -113,6 +154,16 @@ const updatePlayList = async (req: Request, res: Response): Promise<void> => {
 // Controller to delete a playlist by ID
 const deletePlayList = async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log("deletePlayList");
+    const token = req.headers.authorization?.split(" ")[1] as string;
+    const user = Jwt.decode(token) as { _id: string };
+
+    //validate access
+    if (!user) {
+         res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
     const { id } = req.params;
 
     // Validate the ID
