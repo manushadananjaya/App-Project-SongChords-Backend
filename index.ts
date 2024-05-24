@@ -1,9 +1,9 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import songRoutes from "./routes/SongRoutes" 
-import artistRoutes from "./routes/ArtistRoutes" 
-import authRoutes from "./routes/AuthRoutes" 
+import songRoutes from "./routes/SongRoutes";
+import artistRoutes from "./routes/ArtistRoutes";
+import authRoutes from "./routes/AuthRoutes";
 import playlistRoutes from "./routes/PlayListRoutes";
 
 dotenv.config();
@@ -27,12 +27,17 @@ app.get("/", (req: Request, res: Response) => {
   res.send("TypeScript + Node.js + Express Server");
 });
 
+// Log all requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 // Initialize routes
 app.use("/songs", songRoutes);
 app.use("/artists", artistRoutes);
 app.use("/auth", authRoutes);
 app.use("/playlists", playlistRoutes);
-
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

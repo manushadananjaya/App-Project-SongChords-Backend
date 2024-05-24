@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import PlayList from "../models/PlayList";
 import Jwt from "jsonwebtoken";
+import User from "../models/UserModel";
 
 // Controller to get all playlists
 const getAllPlayLists = async (req: Request, res: Response): Promise<void> => {
@@ -154,7 +155,7 @@ const updatePlayList = async (req: Request, res: Response): Promise<void> => {
 // Controller to delete a playlist by ID
 const deletePlayList = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log("deletePlayList");
+    // console.log("deletePlayList");
     const token = req.headers.authorization?.split(" ")[1] as string;
     const user = Jwt.decode(token) as { _id: string };
 
@@ -194,10 +195,53 @@ const deletePlayList = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+//search for a playlist
+const searchPlayList = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { search } = req.query as { search: string };
+
+    if (!search) {
+      res.status(400).json({ error: "Search query is required" });
+      return;
+    }
+
+    const playlists = await PlayList.find({
+      title: { $regex: search, $options: "i" },
+    });
+
+    if (!playlists.length) {
+        res.status(404).json({ error: "Playlist not found" });
+        return;
+    }
+
+    // console.log(playlists[0].user);
+
+    //get user name by user id
+    const user = await User.findById(playlists[0].user).select('name');
+    // console.log(user);
+    if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
+    }
+
+    //return plalist and user as json file
+    res.status(200).json({ playlists, user });
+
+
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while searching for the playlist" });
+  }
+};
+
+
 export {
   getAllPlayLists,
   createPlayList,
   getPlayList,
   updatePlayList,
   deletePlayList,
+  searchPlayList,
+
 };

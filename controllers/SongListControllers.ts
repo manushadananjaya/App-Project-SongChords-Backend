@@ -96,6 +96,7 @@ const newChord = async (req: Request, res: Response) => {
 // Search for a song: if search by title, return the song; if search by artist, return all songs by that artist
 const getSong = async (req: Request, res: Response) => {
   try {
+    // console.log("getSong");
     const { search, filter } = req.query as {
       search: string;
       filter: "name" | "artist";
