@@ -214,18 +214,8 @@ const searchPlayList = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    // console.log(playlists[0].user);
 
-    //get user name by user id
-    const user = await User.findById(playlists[0].user).select('name');
-    // console.log(user);
-    if (!user) {
-        res.status(404).json({ error: "User not found" });
-        return;
-    }
-
-    //return plalist and user as json file
-    res.status(200).json({ playlists, user });
+    res.status(200).json({ playlists });
 
 
   } catch (error) {

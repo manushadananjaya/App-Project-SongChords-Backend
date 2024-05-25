@@ -5,6 +5,7 @@ import songRoutes from "./routes/SongRoutes";
 import artistRoutes from "./routes/ArtistRoutes";
 import authRoutes from "./routes/AuthRoutes";
 import playlistRoutes from "./routes/PlayListRoutes";
+import userRoutes from "./routes/UserRoutes";
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use("/songs", songRoutes);
 app.use("/artists", artistRoutes);
 app.use("/auth", authRoutes);
 app.use("/playlists", playlistRoutes);
+app.use("/users", userRoutes); // Corrected this line
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
