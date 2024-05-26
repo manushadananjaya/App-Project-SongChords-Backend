@@ -5,6 +5,7 @@ import {
   getSong,
   getSignedUrl,
   getSongImageUrl,
+    getSongsById
 } from "../controllers/SongListControllers"; // Adjust the path as necessary
 
 const router: Router = Router();
@@ -15,6 +16,9 @@ router.post("/newChord", newChord);
 router.get("/song", getSong);
 //get signed url
 router.get("/song/:id/image", getSongImageUrl);
+
+//get song by id
+router.get("/song/:id", getSongsById);
 
 
 export default router;

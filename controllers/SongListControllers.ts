@@ -96,6 +96,7 @@ const newChord = async (req: Request, res: Response) => {
 // Search for a song: if search by title, return the song; if search by artist, return all songs by that artist
 const getSong = async (req: Request, res: Response) => {
   try {
+    // console.log("getSong");
     const { search, filter } = req.query as {
       search: string;
       filter: "name" | "artist";
@@ -156,6 +157,23 @@ const getArtist = async (req: Request, res: Response) => {
   }
 };
 
+//get songs by id 
+const getSongsById = async (req: Request, res: Response) => {
+  try {
+    // Fetch the song from the request parameters
+    const id = req.params.id;
+
+    // Fetch all songs by the artist from the database
+    const songs = await SongList.findById(id);
+
+    // Return the songs as a response
+    res.status(200).json(songs);
+  } catch (error) {
+    // Handle any errors that occur during the process
+    res.status(500).json({ error: "An error occurred while fetching songs" });
+  }
+}
+
 // Export the controller functions
 export {
   getAllSongs,
@@ -165,4 +183,5 @@ export {
   getArtist,
   getSongImageUrl,
   getSignedUrl,
+  getSongsById
 };
