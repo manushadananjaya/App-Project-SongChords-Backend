@@ -250,6 +250,52 @@ const getSavedPlayLists = async (
   }
 };
 
+// delete saved playlist 
+const deleteSavedPlayList = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1] as string;
+    const user = Jwt.decode(token) as { _id: string };
+
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { playlistId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(playlistId)) {
+      res.status(400).json({ error: "Invalid playlist ID" });
+      return;
+    }
+
+    const userPlaylist = await User.findById(user._id);
+
+    if (!userPlaylist) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    userPlaylist.savedPlaylists = userPlaylist.savedPlaylists.filter(
+      (id) => id.toString() !== playlistId
+    );
+    await userPlaylist.save();
+
+    res
+      .status(200)
+      .json({ message: "Playlist removed from saved successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        error: "An error occurred while removing the playlist from saved",
+      });
+  }
+};
+
+
 export {
   getAllPlayLists,
   createPlayList,
@@ -259,4 +305,5 @@ export {
   searchPlayList,
   savePlayList,
   getSavedPlayLists,
+    deleteSavedPlayList
 };
