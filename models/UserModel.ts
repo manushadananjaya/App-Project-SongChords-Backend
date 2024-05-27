@@ -10,6 +10,9 @@ interface UserBaseDocument extends Document {
   createdAt: Date;
   updatedAt: Date;
   savedPlaylists: string[];
+  otp : number;
+  otpExpiry : number;
+
 }
 
 // Define the UserModel extending UserBaseDocument to include Mongoose model methods
@@ -27,6 +30,8 @@ const UserSchema = new Schema<UserModel>(
     password: { type: String, required: true },
     refreshToken: { type: String },
     savedPlaylists: [{ type: Schema.Types.ObjectId, ref: "PlayList" }],
+    otp : { type: Number },
+    otpExpiry : { type: Number }
   },
   { timestamps: true }
 );
