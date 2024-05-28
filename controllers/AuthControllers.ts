@@ -30,7 +30,10 @@ const generateRefreshToken = (payload: any): string => {
 // Controller to sign up a new user
 const userSignUp = async (req: Request, res: Response) => {
   try {
-    console.log("userSignUp");
+    // Validate the request body
+    if (!req.body.email || !req.body.password || !req.body.name) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
 
     // Check if user already exists
     const userExists = await UserModel.findOne({ email: req.body.email });
@@ -61,6 +64,11 @@ const userSignUp = async (req: Request, res: Response) => {
 // Controller to sign in an existing user
 const userSignIn = async (req: Request, res: Response) => {
   try {
+    // Validate the request body
+    if (!req.body.email || !req.body.password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
     // Fetch the user with the provided email
     const user: UserModelDocument | null = await UserModel.findOne({
       email: req.body.email,
@@ -126,6 +134,12 @@ const refreshUser = async (req: Request, res: Response) => {
 //controller to change password
 const changePassword = async (req: Request, res: Response) => {
   try {
+
+    // validate request body
+    if (!req.body.newPassword) {
+      return res.status(400).json({ error: "New password is required" });
+    }
+
     const {newPassword} = req.body;
 
     //get user id from token
@@ -158,7 +172,14 @@ const changePassword = async (req: Request, res: Response) => {
 //controller to get user email from request and send otp to email for password reset
 const sendOtp = async (req: Request, res: Response) => {
   try {
+    //validate request body
+    if (!req.body.email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
     const { email } = req.body;
+
+
 
     //fetch user from database
     const userDoc = await UserModel.findOne({ email });
@@ -220,7 +241,13 @@ const sendOtp = async (req: Request, res: Response) => {
 //controller to verify otp 
 const verifyOtp = async (req: Request, res: Response) => {
   try {
+    //validate request body
+    if (!req.body.email || !req.body.otp) {
+      return res.status(400).json({ error: "Email and OTP are required" });
+    }
+
     const { email, otp } = req.body;
+
 
     //convert otp to number
     const otpNumber = parseInt(otp);
@@ -258,6 +285,11 @@ const verifyOtp = async (req: Request, res: Response) => {
 // controller for reset password
 const resetPassword = async (req: Request, res: Response) => {
   try {
+    //validate request body
+    if (!req.body.email || !req.body.password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
     const { email, password } = req.body;
 
     console.log("resetPassword");
