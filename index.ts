@@ -41,6 +41,12 @@ app.use("/auth", authRoutes);
 app.use("/playlists", playlistRoutes);
 app.use("/users", userRoutes); // Corrected this line
 
+//production script
+app.use(express.static("public"));
+app.get("*", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });

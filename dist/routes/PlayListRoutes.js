@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const PlayListControllers_1 = require("../controllers/PlayListControllers");
+const router = (0, express_1.Router)();
+router.get("/", PlayListControllers_1.getAllPlayLists);
+router.post("/", PlayListControllers_1.createPlayList);
+router.get("/saved", PlayListControllers_1.getSavedPlayLists);
+router.delete("/saved/:playlistId", PlayListControllers_1.deleteSavedPlayList);
+router.get("/playlist/search", PlayListControllers_1.searchPlayList);
+router.get("/:id", PlayListControllers_1.getPlayList);
+router.put("/:id", PlayListControllers_1.updatePlayList);
+router.delete("/:id", PlayListControllers_1.deletePlayList);
+router.post("/save", PlayListControllers_1.savePlayList);
+exports.default = router;
