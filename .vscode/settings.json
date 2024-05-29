@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/3412605e-7633-44f0-8da4-6bf9a56e1205/resourceGroups/manu-group/providers/Microsoft.Web/sites/manuAppSong",
+    "appService.deploySubpath": "."
+}
