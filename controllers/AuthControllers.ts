@@ -27,12 +27,45 @@ const generateRefreshToken = (payload: any): string => {
   });
 };
 
+//controller to check username is unique
+const checkUserName = async (req: Request, res: Response) => {
+  try {
+   
+
+    const { username } = req.params;
+
+    // Validate from params
+    if (!username) {
+      return res.status(400).json({ error: "User name is required" });
+    }
+
+    // Check if username is unique
+    const userNameExists = await UserModel.findOne({ name: username });
+    if (userNameExists) {
+      return res.status(400).json({ error: "User name already exists" });
+    }
+
+    res.status(200).json({ message: "User name is unique" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while checking user name" });
+  }
+};
+
 // Controller to sign up a new user
 const userSignUp = async (req: Request, res: Response) => {
   try {
     // Validate the request body
     if (!req.body.email || !req.body.password || !req.body.name) {
       return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    //check user name is unique
+    const userNameExists = await UserModel.findOne({ name: req.body.name });
+    if (userNameExists) {
+      return res.status(400).json({ error: "User name already exists" });
     }
 
     // Check if user already exists
@@ -319,4 +352,4 @@ const resetPassword = async (req: Request, res: Response) => {
 
 
 
-export { userSignUp, userSignIn, refreshUser , changePassword, sendOtp , verifyOtp , resetPassword};
+export { userSignUp, userSignIn, refreshUser , changePassword, sendOtp , verifyOtp , resetPassword , checkUserName};
