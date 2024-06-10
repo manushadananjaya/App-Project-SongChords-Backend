@@ -43,22 +43,22 @@ const getSignedUrl = (bucket: string, key: string) => {
 };
 
 // Controller to get a signed URL for an image file
-const getSongImageUrl = async (req: Request, res: Response) => {
-  try {
-    const songId = req.params.id;
-    const song = await SongList.findById(songId);
-    if (!song) {
-      return res.status(404).json({ error: "Song not found" });
-    }
+// const getSongImageUrl = async (req: Request, res: Response) => {
+//   try {
+//     const songId = req.params.id;
+//     const song = await SongList.findById(songId);
+//     if (!song) {
+//       return res.status(404).json({ error: "Song not found" });
+//     }
 
-    const imageUrl = await getSignedUrl("chordsapp", song.imageKey); // Make sure imageKey is the correct key for your image
-    res.status(200).json({ url: imageUrl });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the image URL" });
-  }
-};
+//     const imageUrl = await getSignedUrl("chordsapp", song.imageKey); // Make sure imageKey is the correct key for your image
+//     res.status(200).json({ url: imageUrl });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ error: "An error occurred while fetching the image URL" });
+//   }
+// };
 
 // Controller to get all songs from the database
 const getAllSongs = async (req: Request, res: Response) => {
@@ -174,6 +174,42 @@ const getSongsById = async (req: Request, res: Response) => {
   }
 }
 
+//get lyrics
+const getLyrics = async (req: Request, res: Response) => {
+  try {
+    // Fetch the song from the request parameters
+    const id = req.params.id;
+
+    // Fetch all songs by the artist from the database
+    const songs = await SongList.findById(id);
+
+    // Return the songs as a response
+    // console.log(songs?.lyrics);
+    res.status(200).json(songs?.lyrics); // Add null check before accessing lyrics property
+
+  } catch (error) {
+    // Handle any errors that occur during the process
+    res.status(500).json({ error: "An error occurred while fetching songs" });
+  }
+}
+//get chords
+const getChords = async (req: Request, res: Response) => {
+  try {
+    // Fetch the song from the request parameters
+    const id = req.params.id;
+
+    // Fetch all songs by the artist from the database
+    const songs = await SongList.findById(id);
+
+    // Return the songs as a response
+    res.status(200).json(songs?.chords); // Add null check before accessing chords property
+  } catch (error) {
+    // Handle any errors that occur during the process
+    res.status(500).json({ error: "An error occurred while fetching songs" });
+  }
+};
+
+
 // Export the controller functions
 export {
   getAllSongs,
@@ -181,7 +217,8 @@ export {
   getSong,
   getAllArtists,
   getArtist,
-  getSongImageUrl,
+  getChords,
   getSignedUrl,
-  getSongsById
+  getSongsById,
+  getLyrics
 };
