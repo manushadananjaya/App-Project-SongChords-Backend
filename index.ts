@@ -39,7 +39,8 @@ app.use("/songs", songRoutes);
 app.use("/artists", artistRoutes);
 app.use("/auth", authRoutes);
 app.use("/playlists", playlistRoutes);
-app.use("/users", userRoutes); // Corrected this line
+app.use("/users", userRoutes);
+
 
 //production script
 app.use(express.static("public"));
