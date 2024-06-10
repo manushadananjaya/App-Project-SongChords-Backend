@@ -3,9 +3,10 @@ import {
   getAllSongs,
   newChord,
   getSong,
-  getSignedUrl,
-  getSongImageUrl,
-    getSongsById
+  getChords,
+  // getSongImageUrl,
+    getSongsById,
+    getLyrics
 } from "../controllers/SongListControllers"; // Adjust the path as necessary
 
 const router: Router = Router();
@@ -15,7 +16,11 @@ router.post("/newChord", newChord);
 //search for a song
 router.get("/song", getSong);
 //get signed url
-router.get("/song/:id/image", getSongImageUrl);
+// router.get("/song/:id/image", getSongImageUrl);
+//get lyrics
+router.get("/song/:id/lyrics", getLyrics);
+//get Chords
+router.get("/song/:id/chords", getChords);
 
 //get song by id
 router.get("/song/:id", getSongsById);
