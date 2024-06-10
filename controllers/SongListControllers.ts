@@ -209,6 +209,17 @@ const getChords = async (req: Request, res: Response) => {
   }
 };
 
+//controller to send all songList document data to frontend to download
+const downloadSongList = async (req: Request, res: Response) => {
+  try {
+    const songList = await SongList.find();
+    res.status(200).json(songList);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while fetching songs" });
+  }
+}
+
+
 
 // Export the controller functions
 export {
@@ -220,5 +231,6 @@ export {
   getChords,
   getSignedUrl,
   getSongsById,
-  getLyrics
+  getLyrics,
+  downloadSongList
 };
