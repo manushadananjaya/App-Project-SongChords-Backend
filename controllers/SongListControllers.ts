@@ -219,6 +219,26 @@ const downloadSongList = async (req: Request, res: Response) => {
   }
 }
 
+//controller to get artist count count unique artist in songList
+const getArtistCount = async (req: Request, res: Response) => {
+  try {
+    const artistCount = await SongList.distinct("artist")
+    res.status(200).json(artistCount);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while fetching artist count" });
+  }
+}
+  
+
+//controller to get song count
+const getSongCount = async (req: Request, res: Response) => {
+  try {
+    const songCount = await SongList.countDocuments();
+    res.status(200).json(songCount);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while fetching song count" });
+  }
+}
 
 
 // Export the controller functions
@@ -232,5 +252,7 @@ export {
   getSignedUrl,
   getSongsById,
   getLyrics,
-  downloadSongList
+  downloadSongList,
+  getSongCount,
+  getArtistCount,
 };

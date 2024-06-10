@@ -352,4 +352,18 @@ const resetPassword = async (req: Request, res: Response) => {
 
 
 
-export { userSignUp, userSignIn, refreshUser , changePassword, sendOtp , verifyOtp , resetPassword , checkUserName};
+
+
+
+
+export {
+  userSignUp,
+  userSignIn,
+  refreshUser,
+  changePassword,
+  sendOtp,
+  verifyOtp,
+  resetPassword,
+  checkUserName,
+  
+};

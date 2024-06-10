@@ -8,6 +8,7 @@ import {
   getSongsById,
   getLyrics,
   downloadSongList,
+  getSongCount,
 } from "../controllers/SongListControllers"; // Adjust the path as necessary
 
 const router: Router = Router();
@@ -28,6 +29,9 @@ router.get("/song/:id", getSongsById);
 
 //download songList
 router.get("/download", downloadSongList);
+
+//get song count
+router.get("/songCount", getSongCount);
 
 
 export default router;
