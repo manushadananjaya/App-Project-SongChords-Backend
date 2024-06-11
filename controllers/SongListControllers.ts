@@ -129,8 +129,8 @@ export default getSong;
 // Controller to get all artists from the database
 const getAllArtists = async (req: Request, res: Response) => {
   try {
-    // Fetch all artists from the database
-    const artists = await SongList.distinct("artist");
+    // Fetch all artists from the database and sort them
+    const artists = await SongList.distinct("artist").sort();
 
     // Return the artists as a response
     res.status(200).json(artists);
